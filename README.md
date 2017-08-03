@@ -1,7 +1,7 @@
 # coin-bots
 Cryptocurrency bots
 
-##Todo: 
+## Todo: 
 - Get data
 ..- past 90 day data should be good
 ..- work in getData.js to write to a local file
