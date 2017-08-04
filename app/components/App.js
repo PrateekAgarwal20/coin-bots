@@ -1,15 +1,13 @@
 import React from 'react';
+import AppContainer from '../containers/AppContainer.js';
 
-class App extends React.Component {
-  constructor(props){
-    super(props)
-  }
-
-  render(){
-    return(
-      <div>Your App Here</div>
-    )
-  }
-}
+const App = ({}) => {
+    return (
+        <div>
+          <h1>Coin Bot</h1>
+          <AppContainer/>
+        </div>
+    );
+};
 
 export default App;
