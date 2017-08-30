@@ -1,44 +1,65 @@
-/*
-  {
-    date: 1483228800,
-    high: 8.555,
-    low: 8.04482173,
-    open: 8.04482173,
-    close: 8.52804175,
-    volume: 61502.36821553,
-    quoteVolume: 7291.95062299,
-    weightedAverage: 8.43428204
-  }
-*/
-var fs = require('fs')
-
-var data = JSON.parse(fs.readFileSync('./historical_USDT_ETH.txt'));
-
-var account = {
-  USDT: 100
-}
-var portfolio = {}
-
+const Data = require('./dataFunctions.js');
+const Trade = require('./tradingFunctions.js');
+const Strategy = require('./strategies.js');
+const ACCOUNT_START = 100;
+let PERCENT = 1;
 
 const main = () => {
-  data.forEach((info) => {
-    // IDEA: Add the main strategy script here, what you want to test and stuff
-    // var shouldBuy = strategy(account, portfolio)
-  })
+    // data.forEach((info) => {
+    // // IDEA: Add the main strategy script here, what you want to test and stuff
+    // // var shouldBuy = strategy(account, portfolio)
+    // });
+    const data = Data.data;
+    const percentArr = [];
+    const valueArr = [];
+    // TODO: fix fees
+    for(let i = 0; i < 150; i++) {
+        PERCENT = 1 + (i / 100);
+        Trade.setVariables(ACCOUNT_START, PERCENT);
+        const state = {
+            account: ACCOUNT_START,
+            portfolio: {ETH: 0}
+        };
 
-}
+        const newState = Strategy.fiveDollarBuyStrategy(state, data);
+        let value = newState.account;
+        // Convert to dollars if all assets are in ETH at end
+        if(newState.portfolio.ETH) {
+            value = newState.portfolio.ETH * data[data.length - 1].weightedAverage;
+        }
 
-/*
-  Should be able to carry out these functions:
-  Buy - buy at the closest one
-  Sell - sell at the closest one
-  
+        percentArr.push(PERCENT);
+        valueArr.push(value);
+    }
 
-  Helper functions
-  Get price - returns price given a valid (in register) UNIX date
+    // percentArr.forEach((percent) => {
+    //     console.log(percent.toString().slice(0, 4));
+    // });
+    // console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
+    // valueArr.forEach((value) => {
+    //     console.log(value);
+    // });
+    const max1 = {val: 0, percent: 0};
+    const max2 = {val: 0, percent: 0};
+    const max3 = {val: 0, percent: 0};
+    valueArr.forEach((val, index) => {
+        if(val < max2.val && val >= max3.val) {
+            max3.val = val;
+            max3.percent = percentArr[index];
+        }
+        if(val < max1.val && val >= max2.val) {
+            max2.val = val;
+            max2.percent = percentArr[index];
+        }
+        if(val >= max1.val) {
+            max1.val = val;
+            max2.percent = percentArr[index];
+        }
+    });
+    console.log(max1.percent, max1.val);
+    console.log(max2.percent, max1.val);
+    console.log(max3.percent, max1.val);
+    // console.log('ACCOUNT: ', newState.account, 'PORTFOLIO: ', newState.portfolio);
+};
 
-*/
-
-
-
-main()
+main();
