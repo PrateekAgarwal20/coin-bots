@@ -17,7 +17,7 @@ Cryptocurrency bots
   - Follow trading volumes in other exchanges for certain coins and see if Poloniex volume spikes before GDAX. If so, use Poloniex trading as a predictor for GDAX spikes.
   - Invest in ICOs, sell after a certain percentage is made
   - Buy when there's a hammer, sell when there's a shadow
-  
+  - Fibonacci Retracement -> https://www.deepdotweb.com/2017/04/30/tutorial-altcoin-flipping-cryptocurrency-trading-strategies-always-win/
 - #### News
   - deepdotweb.com, Coindesk
   - bitcointalk.org for ICOs
