@@ -2,10 +2,6 @@
 Cryptocurrency bots
 
 ## Todo: 
-- #### Get data
-  - past 90 day data should be good
-  - work in getData.js to write to a local file
-  - make sure in JSON format that the graph will take
 - #### Make graphs
   - React Stockchart
   - Be able to toggle graph views
@@ -17,3 +13,15 @@ Cryptocurrency bots
   - don't actually put in orders, but track the exchanges
   - "make trades", which means change account balances
   - take transaction fees into account
+- #### Strategy Ideas
+  - Follow trading volumes in other exchanges for certain coins and see if Poloniex volume spikes before GDAX. If so, use Poloniex trading as a predictor for GDAX spikes.
+  - Invest in ICOs, sell after a certain percentage is made
+  - Buy when there's a hammer, sell when there's a shadow
+  
+- #### News
+  - deepdotweb.com, Coindesk
+  - bitcointalk.org for ICOs
+  - Coin adoptions in dark web
+- #### Tools
+  - tradingview.com
+  
