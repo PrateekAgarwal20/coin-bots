@@ -10,17 +10,23 @@ const Trade = require('./tradingFunctions.js');
     all your money is already in ETH
 */
 
+const buyAndHold = (state, tempData) => {
+    let newState = Object.assign({}, state);
+    newState = Trade.buy(newState, tempData[0].weightedAverage);
+    return newState;
+};
+
 // This is a state transition function. Input account and portfolio, output
 // account' and portfolio'
-// TODO: run tests with intervals other than 5 dollars but not so low that the fee is cancelled
-//       programatically figure out the perfect buy price
+// NOTE: Variables include: BUY_DIFF, STOP_LOSS_PERCENT, and RETURNS_PERCENT.
+//       The last two variables are in the tradinfFunctions file
 const fiveDollarBuyStrategy = (state, tempData) => {
     let newState = Object.assign({}, state);
     let prevInfo = tempData[0];
     const BUY_DIFF = 5;
     tempData.forEach((info) => {
         if(Trade.stopLoss(newState, info.weightedAverage)) {
-            Trade.sell(newState, info.weightedAverage);
+            newState = Trade.sell(newState, info.weightedAverage);
         } else if(newState.account > 0) {
             // STRATEGY: If there is a 5$ difference within the last five minutes, buy
             if((info.weightedAverage - prevInfo.weightedAverage) > BUY_DIFF) {
@@ -43,6 +49,25 @@ const fiveDollarBuyStrategy = (state, tempData) => {
     return newState;
 };
 
+const candlestick = (state, tempData) => {
+    let newState = Object.assign({}, state);
+    tempData.forEach((info) => {
+        if(Trade.stopLoss(newState, info.close)) {
+            console.log('here');
+            newState = Trade.sell(newState, info.close);
+        } else if (newState.account > 0 && Trade.isHammerOrShadow(info) === 1) {
+            newState = Trade.buy(newState, info.close);
+        } else if (newState.portfolio.ETH > 0 && Trade.isHammerOrShadow(info) === -1) {
+            if(Trade.sufficientReturns(newState, info.close)) {
+                newState = Trade.sell(newState, info.close);
+            }
+        }
+    });
+    return newState;
+};
+
 module.exports = {
-    fiveDollarBuyStrategy
+    buyAndHold,
+    fiveDollarBuyStrategy,
+    candlestick
 };
